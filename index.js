@@ -1,23 +1,29 @@
+// npm install * --save
 const express = require('express');
 const mysql2 = require('mysql2');
+const cors = require("cors");
+const path = require("path");
+
+// Importing MySQL password from external file (.gitignore)
+const password = require('./password');
 
 const app = express(); // applying middleware to assure it runs every endpoint callback that are defined (json)
 const PORT = 8080;
 
 app.use( express.json() ); // ensuring that express.json middleware is running (converting body to json)
-
-app.listen(
-    PORT,
-    () => console.log(`it's alive on http://localhost:${PORT}`)
-) // setting up a responsive api, with a message in the terminal.
-
+app.use(cors()); // Enable CORS to avoid network security restrictions
 
 const db = mysql2.createConnection({
     host:"localhost",
     user:"root",
-    password:"MyNewPass",
-    database:"myDB"
+    password: password,
+    database:"studie_cafe"
 });
+
+// All files within the public folder will be served automatically
+// when you access the root path http://localhost:8080/
+// For details, refer to: https://expressjs.com/en/starter/static-files.html
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Checking connect to the database
 db.connect(err => {
@@ -149,4 +155,11 @@ app.get('/cafeFavoritesCount/:cafeId', (req, res) => {
             }
         });
 });
+
+app.listen(
+    PORT,
+    () => console.log(`it's alive on http://localhost:${PORT}`)
+) // setting up a responsive api, with a message in the terminal.
+
+
 

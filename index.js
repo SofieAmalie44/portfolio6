@@ -1,6 +1,6 @@
 // npm install * --save
 const express = require("express");   // Express framework for handling HTTP requests
-const mysql = require("mysql2");      // MySQL database driver
+const mysql2 = require("mysql2");      // MySQL database driver
 const cors = require("cors");         // CORS middleware for handling cross-origin resource sharing
 const path = require("path");         // Path module for working with file and directory paths
 

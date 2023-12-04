@@ -1,18 +1,21 @@
 // npm install * --save
-const express = require('express');
-const mysql2 = require('mysql2');
-const cors = require("cors");
-const path = require("path");
+const express = require("express");   // Express framework for handling HTTP requests
+const mysql = require("mysql2");      // MySQL database driver
+const cors = require("cors");         // CORS middleware for handling cross-origin resource sharing
+const path = require("path");         // Path module for working with file and directory paths
 
 // Importing MySQL password from external file (.gitignore)
 const password = require('./password');
 
-const app = express(); // applying middleware to assure it runs every endpoint callback that are defined (json)
+// Initializing Express application
+const app = express();
 const PORT = 8080;
 
-app.use( express.json() ); // ensuring that express.json middleware is running (converting body to json)
+// Middleware setup
+app.use(express.json());
 app.use(cors()); // Enable CORS to avoid network security restrictions
 
+// Creating a MySQL connection to studie_cafe db
 const db = mysql2.createConnection({
     host:"localhost",
     user:"root",
@@ -26,23 +29,22 @@ const db = mysql2.createConnection({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Checking connect to the database
-db.connect(err => {
-    if (err) {
-        console.error('Database connection error:', err);
+db.connect(error => {
+    if (error) {
+        console.error('Database connection error:', error);
     } else {
         console.log('Connected to the database');
     }
 });
-
 
 // Endpoint to get all cafes
 app.get('/cafes', (req, res) => {
     const query = 'SELECT * FROM cafes';
 
     // Executing the query
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
+    db.query(query, (error, results) => {
+        if (error) {
+            console.error('Error executing query:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         } else {
             res.json(results);
@@ -50,61 +52,52 @@ app.get('/cafes', (req, res) => {
     });
 });
 
-
 // Endpoint to get any cafe through the id
-app.post('/cafe/:id', (req, res) => {
-    const {id} = req.params;
+app.get('/cafe/:id', (req, res) => {
+    const id = req.params.id;
     const query = 'SELECT * FROM cafes WHERE cafe_id = ?';
 
-    db.query(query, [id], (err, result) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            res.status(500).json({ error: 'Internal Server Error' });
+    db.query(query, [id], (error, result) => {
+        if (error) {
+            console.error('Error finding cafe:', error);
+            res.status(500).send('Internal Server Error ' +  error);
         } else {
-            if (result.length > 0) {
-                res.send({
-                    cafe: result[0],
-                });
-            } else {
-                res.status(404).json({ error: 'Cafe not found' });
-            }
+            res.status(200).send(result);
         }
     });
 });
 
 
 // Endpoint to get any cafe with a noise level lower than the one requested.
-app.post('/noise/:number', (req, res) => {
-    const noiseNumber = req.params.number;
-    const query = 'SELECT * FROM cafes WHERE `noice_level` < ?';
+app.get('/noise/:number', (req, res) => {
+    const noiseNumber = parseInt(req.params.number);
+    const query = 'SELECT * FROM cafes WHERE noise_level < ?';
 
     db.query(query, [noiseNumber], (error, result) => {
-        res.send(result);
+        if (error) {
+            console.error('Error finding noise_level:', error);
+            res.status(500).send('Internal Server Error ' +  error);
+        } else {
+            res.status(200).send(result);
+        }
     });
 });
 
 
 // Endpoint to get any user email through the user id
-app.get('/email/:id',(req, res)=>{
-    const emailByID = req.params.id;
-    const query = 'SELECT `email` FROM users WHERE `user_id` = ?';
+app.get('/email/:id', (req, res) => {
+    const user_id = req.params.id;
+    const query = 'SELECT email FROM users WHERE user_id = ?';
 
-        db.query(query, [emailByID], (error, result) => {
-            res.send(result);
-        });
-});
-
-
-// Endpoint that can get all the usernames that has an age higher than the average age as parameter
-app.get('/averageAge/:number', (req, res) => {
-    const ageAVG = req.params.number;
-    const query = `SELECT username, AVG(age) as average_age FROM users GROUP BY username HAVING AVG(age) > ?`;
-
-    db.query(query, [ageAVG], (error, result) => {
-        res.send(result);
+    db.query(query, [user_id], (error, result) => {
+        if (error) {
+            console.error('Error finding email by user_id:', error);
+            res.status(500).send('Internal Server Error ' +  error);
+        } else {
+            res.status(200).send(result);
+        }
     });
 });
-
 
 // Endpoint that can display the username by the phone number af parameter
 app.get('/nameByNumber/:number', (req, res) => {
@@ -156,10 +149,16 @@ app.get('/cafeFavoritesCount/:cafeId', (req, res) => {
         });
 });
 
-app.listen(
-    PORT,
-    () => console.log(`it's alive on http://localhost:${PORT}`)
-) // setting up a responsive api, with a message in the terminal.
+// Default route to handle 404 errors for unmatched API endpoints
+app.get('*',(req,res) =>{
+    res.sendStatus(404);
+});
+
+// Starting the Express server on the specified port (8080)
+app.listen(PORT, () => {
+    console.log(`it's alive on http://localhost:${PORT}`)
+    }
+); // setting up a responsive api, with a message in the terminal.
 
 
 

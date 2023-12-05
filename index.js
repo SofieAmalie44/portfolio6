@@ -52,6 +52,7 @@ app.get('/cafes', (req, res) => {
     });
 });
 
+
 // Endpoint to get any cafe through the id
 app.get('/cafe/:id', (req, res) => {
     const id = req.params.id;
@@ -98,6 +99,7 @@ app.get('/email/:id', (req, res) => {
         }
     });
 });
+
 
 // Endpoint that can display the username by the phone number af parameter
 app.get('/nameByNumber/:number', (req, res) => {

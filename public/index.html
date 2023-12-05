@@ -12,12 +12,26 @@
     <h1>CPH Study Cafe Finder</h1>
 
     <div class="header-buttons">
-        <button>Create user</button>
-        <button>Log in</button>
+        <button id="front-create-user">Create user</button>
+        <button id="front-log-in">Log in</button>
     </div>
+
+    <div id="create-user-modal" class="hidden">
+        <h2>Create new user</h2>
+        <form>
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="username here..." required>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="password here..." required>
+        </form>
+        <button id="create-user">Create User</button>
+        <button id="create-user-cancel">Cancel</button>
+    </div>
+
 </header>
 
 <main>
+    <div id="backdrop" class="hidden"></div>
     <section class="filters">
         <h2>Filters</h2>
         <div>
@@ -31,23 +45,9 @@
             </select>
         </div>
     </section>
-
     <section class="cafes">
         <h2>Cafes Overview</h2>
-        <ul>
-            <li>
-                <span>Cafe 1 Name</span>
-                <span>description</span>
-            </li>
-            <li>
-                <span>Cafe 2 Name</span>
-                <span>description</span>
-            </li>
-            <li>
-                <span>Cafe 3 Name</span>
-                <span>description</span>
-            </li>
-        </ul>
+        <ul></ul>
     </section>
 </main>
 
@@ -55,6 +55,7 @@
     <span>Footer</span>
 </footer>
 
+<script src="js-src/user.js"></script>
 <script src="js-src/main.js"></script>
 </body>
 </html>

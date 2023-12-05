@@ -84,6 +84,43 @@ app.get('/noise/:number', (req, res) => {
 });
 
 
+/**************************************************/
+/**************** USER END-POINTS *****************/
+/**************************************************/
+
+// Endpoint to create a new user
+app.post('/users/new', (req, res) => {
+    // Extracting username and password from the request body
+    const username = req.body.username;
+    const email = req.body.email;
+    const birthDate = req.body.birthDate;
+    const password = req.body.password;
+
+    console.log(birthDate);
+
+    // Checking if the username already exists
+    db.query('SELECT username, email FROM users WHERE username = ? AND email = ?',
+        [username, email],
+        (error, results) => {
+            if (results.length > 0) {
+                res.status(403).send('Username or email already exists');
+            } else {
+                // Inserting a new user into the database
+                db.query('INSERT INTO users (username, email, date_of_birth, `password`) VALUES (?, ?, ?, ?)',
+                    [username, email, birthDate, password],
+                    (error, results) => {
+                        if (error) {
+                            console.error('Error inserting user:', error);
+                            res.status(500).send('Internal Server Error ' +  error);
+                        } else {
+                            res.status(200).send(results);
+                        }
+                    });
+            }
+        });
+});
+
+
 // Endpoint to get any user email through the user id
 app.get('/email/:id', (req, res) => {
     const user_id = req.params.id;

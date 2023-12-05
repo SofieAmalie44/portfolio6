@@ -59,7 +59,7 @@ button {
     align-items: center;
     flex-direction: column;
     gap: 24px;
-    top: 25dvh;
+    top: 10dvh;
     width: 50%;
     max-width: 300px;
     padding: 30px;

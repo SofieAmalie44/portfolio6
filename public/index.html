@@ -2,23 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Study Cafe</title>
+    <title>CPH Study Cafe Finder</title>
     <link rel="stylesheet" href="style.css">
     <!-- TODO: Find logo -->
     <link rel="icon" type="image/x-icon" href="img/...">
 </head>
 <body>
 <header>
-    <h1>Study Cafe</h1>
+    <h1>CPH Study Cafe Finder</h1>
 
-    <div>
+    <div class="header-buttons">
         <button>Create user</button>
         <button>Log in</button>
     </div>
 </header>
 
 <main>
-    <span>Main</span>
+    <section class="filters">
+        <h2>Filters</h2>
+        <div>
+            <label for="price-level">Price Level:</label>
+            <select id="price-level"> <!-- TODO: Load this dynamically -->
+                <option value="low">low</option>
+                <option value="low-medium">low-medium</option>
+                <option value="medium">medium</option>
+                <option value="medium-high">medium-high</option>
+                <option value="medium-high">medium-high</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="cafes">
+        <h2>Cafes Overview</h2>
+        <ul>
+            <li>
+                <span>Cafe 1 Name</span>
+                <span>description</span>
+            </li>
+            <li>
+                <span>Cafe 2 Name</span>
+                <span>description</span>
+            </li>
+            <li>
+                <span>Cafe 3 Name</span>
+                <span>description</span>
+            </li>
+        </ul>
+    </section>
 </main>
 
 <footer>

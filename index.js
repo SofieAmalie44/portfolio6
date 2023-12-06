@@ -90,20 +90,18 @@ app.get('/noise/:number', (req, res) => {
 
 // Endpoint to create a new user
 app.post('/users/new', (req, res) => {
-    // Extracting username and password from the request body
+    // Extracting username, email, birtdate and password from the request body
     const username = req.body.username;
     const email = req.body.email;
     const birthDate = req.body.birthDate;
     const password = req.body.password;
 
-    console.log(birthDate);
-
-    // Checking if the username already exists
-    db.query('SELECT username, email FROM users WHERE username = ? AND email = ?',
+    // Checking if the username or email already exists
+    db.query('SELECT username, email FROM users WHERE username = ? OR email = ?',
         [username, email],
         (error, results) => {
             if (results.length > 0) {
-                res.status(403).send('Username or email already exists');
+                res.status(403).send('Username OR email already exists');
             } else {
                 // Inserting a new user into the database
                 db.query('INSERT INTO users (username, email, date_of_birth, `password`) VALUES (?, ?, ?, ?)',
@@ -118,6 +116,41 @@ app.post('/users/new', (req, res) => {
                     });
             }
         });
+});
+
+// Endpoint to log in user by email or username (and password)
+// Use POST and not GET, to not expose user password in URL.
+app.post('/users/login', (req, res) => {
+    // Extracting username and password from the request body
+    const usernameOrEmail = req.body.usernameOrEmail;
+    const password = req.body.password;
+
+    // Check if the user exists by username or email
+    const query = 'SELECT username FROM users WHERE username = ? OR email = ?';
+    db.query(query, [usernameOrEmail, usernameOrEmail], (error, results) => {
+        if (results.length > 0) {
+
+            // Check if password is correct
+            const queryPasswordCheck = 'SELECT username FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
+            db.query(queryPasswordCheck, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
+                if (error) {
+                    console.error('Error logging in user:', error);
+                    res.status(500).send('Internal Server Error ' +  error);
+                    return;
+                }
+
+                if (results.length > 0) {
+                    res.status(200).send('Login successful');
+                } else {
+                    res.status(401).send('Incorrect password');
+                }
+
+            });
+        } else {
+            res.status(401).send('Username OR email does not exists');
+        }
+
+    });
 });
 
 

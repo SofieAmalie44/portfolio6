@@ -16,7 +16,7 @@ const loginModalElement = document.querySelector('#login-user-modal');
 const loginModalBackdropElement = document.querySelector('#login-backdrop');
 const modalLoginUserButton = document.querySelector('#login-user');
 const modalCancelLoginUserButton = document.querySelector('#login-cancel');
-const modalLoginUserNameInput = document.querySelector('#login-username-mail');
+const modalLoginUsernameOrEmailInput = document.querySelector('#login-username-mail');
 const modalLoginUserPasswordInput = document.querySelector('#login-password');
 
 frontPageCreateUserButton.addEventListener('click', toggleCreateUserModal);
@@ -25,6 +25,23 @@ modalLoginUserButton.addEventListener('click', loginUser);
 modalCancelLoginUserButton.addEventListener('click', toggleLogInUserModal);
 modalCancelCreateUserButton.addEventListener('click', toggleCreateUserModal);
 modalCreateUserButton.addEventListener('click', createNewUser);
+modalCreateUserPasswordInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        modalCreateUserButton.click();
+    }
+});
+
+modalLoginUserPasswordInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        modalLoginUserButton.click();
+    }
+});
+
+/***************************************************/
+/***************************************************/
+/***************************************************/
 
 function createNewUser() {
     const username = modalCreateUserUsernameInput.value;
@@ -63,7 +80,35 @@ function createNewUser() {
 }
 
 function loginUser() {
+    const usernameOrEmail = modalLoginUsernameOrEmailInput.value;
+    const password = modalLoginUserPasswordInput.value;
 
+    fetch("/users/login", {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "usernameOrEmail": usernameOrEmail,
+            "password": password
+        })
+    }).then(response => {
+        if (response.ok) {
+            console.log('User logged in successfully');
+            toggleLogInUserModal();
+            // TODO: What to do after user logged in?
+        } else {
+            console.error('Something went wrong:', response.statusText);
+            return Promise.reject(response.status); // Reject the promise with the status
+        }
+    }).catch(error => {
+        if (error === 401) {
+            console.log('username/email or password is incorrect');
+            // TODO: Maybe switch to create user?
+        } else {
+            console.error('Unhandled error:', error);
+        }
+    });
 }
 
 function toggleCreateUserModal() {
@@ -74,7 +119,7 @@ function toggleCreateUserModal() {
 }
 
 function toggleLogInUserModal() {
-    modalLoginUserNameInput.value = '';
+    modalLoginUsernameOrEmailInput.value = '';
     modalLoginUserPasswordInput.value = '';
     loginModalElement.classList.toggle('hidden');
     loginModalBackdropElement.classList.toggle('hidden');

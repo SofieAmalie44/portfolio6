@@ -139,7 +139,6 @@ main {
     width: 30%;
     max-width: 350px;
     min-width: 250px;
-    height: 100%;
     gap: 30px;
     padding-top: 30px;
 }

@@ -16,29 +16,43 @@
         <button id="front-log-in">Log in</button>
     </div>
 
-    <!-- TODO: Make form wider and make mobile view stay same -->
-    <div id="backdrop" class="hidden">
-        <div id="create-user-modal" class="hidden">
+    <div id="create-backdrop" class="hidden">
+        <div id="create-user-modal" class="modal hidden">
             <h2>Create new user</h2>
             <form>
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="username here..." required>
+                <label for="create-username">Username</label>
+                <input type="text" id="create-username" placeholder="username here..." required>
 
-                <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="email here..." required>
+                <label for="create-email">E-mail</label>
+                <input type="email" id="create-email" placeholder="email here..." required>
 
                 <label for="date-of-birth">Birth date</label>
                 <input type="date" id="date-of-birth" required>
 
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="password here..." required>
-
-                <!-- button is in form to enable auto-scroll on smaller height -->
-                <div class="create-user-buttons">
-                    <button id="create-user">Create User</button>
-                    <button id="create-user-cancel">Cancel</button>
-                </div>
+                <label for="create-password">Password</label>
+                <input type="password" id="create-password" placeholder="password here..." required>
             </form>
+            <div class="form-buttons">
+                <button id="create-user">Create User</button>
+                <button id="create-user-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-backdrop" class="hidden">
+        <div id="login-user-modal" class="modal hidden">
+            <h2>Log in</h2>
+            <form>
+                <label for="login-username-mail">Username or Email</label>
+                <input type="text" id="login-username-mail" placeholder="username or email here..." required>
+
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="password here..." required>
+            </form>
+            <div class="form-buttons">
+                <button id="login-user">Log in</button>
+                <button id="login-cancel">Cancel</button>
+            </div>
         </div>
     </div>
 

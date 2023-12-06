@@ -51,7 +51,7 @@ button {
       box-shadow: 0 0 10px rgba(0,0,0, .2);
   }
 
-#backdrop {
+#create-backdrop, #login-backdrop {
     position: fixed;
     display: flex;
     justify-content: center;
@@ -63,7 +63,7 @@ button {
     background-color: rgba(0,0,0,0.3);
 }
 
-#create-user-modal {
+.modal {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,18 +80,17 @@ button {
     gap: 20px;
 }
 
-#create-user-modal form {
+form {
     overflow: auto;
-    width: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
     align-items: start;
-    padding-top: 10px;
+    width: 80%;
+    min-height: 100px;
+    padding: 20px;
 }
 
-.create-user-buttons {
-    padding: 10px;
+.form-buttons {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,18 +99,19 @@ button {
     gap: 20px;
 }
 
-#create-user-modal form input {
+.modal form input {
     margin-top: 8px;
     margin-bottom: 20px;
     width: 92%;
 }
 
-#create-user-modal form label {
+.modal form label {
     padding-left: 10px;
 }
 
-#create-user-modal button {
+.modal button {
     background-color: var(--color-two);
+    width: 100px;
 }
 
 input {

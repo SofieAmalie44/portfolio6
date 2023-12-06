@@ -20,6 +20,7 @@ const modalLoginUserButton = document.querySelector('#login-user');
 const modalCancelLoginUserButton = document.querySelector('#login-cancel');
 const modalLoginUsernameOrEmailInput = document.querySelector('#login-username-mail');
 const modalLoginUserPasswordInput = document.querySelector('#login-password');
+const modalLoginUserCreateUserButton = document.querySelector('#login-user-modal form button');
 
 frontPageCreateUserButton.addEventListener('click', toggleCreateUserModal);
 frontPageLogInUserButton.addEventListener('click', toggleLogInUserModal);
@@ -33,6 +34,10 @@ modalCreateUserPasswordInput.addEventListener("keypress", (event) => {
         modalCreateUserButton.click();
     }
 });
+modalLoginUserCreateUserButton.addEventListener('click', () => {
+    toggleLogInUserModal();
+    toggleCreateUserModal();
+})
 
 modalLoginUserPasswordInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {

@@ -90,14 +90,14 @@ app.get('/noise/:number', (req, res) => {
 
 // Endpoint to create a new user
 app.post('/users/new', (req, res) => {
-    // Extracting username, email, birtdate and password from the request body
+    // Extracting username, email, birthdate and password from the request body
     const username = req.body.username;
     const email = req.body.email;
     const birthDate = req.body.birthDate;
     const password = req.body.password;
 
     // Checking if the username or email already exists
-    db.query('SELECT username, email FROM users WHERE username = ? OR email = ?',
+    db.query('SELECT user_id FROM users WHERE username = ? OR email = ?',
         [username, email],
         (error, results) => {
             if (results.length > 0) {
@@ -126,12 +126,12 @@ app.post('/users/login', (req, res) => {
     const password = req.body.password;
 
     // Check if the user exists by username or email
-    const query = 'SELECT username FROM users WHERE username = ? OR email = ?';
+    const query = 'SELECT user_id FROM users WHERE username = ? OR email = ?';
     db.query(query, [usernameOrEmail, usernameOrEmail], (error, results) => {
         if (results.length > 0) {
 
             // Check if password is correct
-            const queryPasswordCheck = 'SELECT username FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
+            const queryPasswordCheck = 'SELECT user_id FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
             db.query(queryPasswordCheck, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
                 if (error) {
                     console.error('Error logging in user:', error);

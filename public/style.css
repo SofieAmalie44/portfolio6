@@ -104,7 +104,18 @@ form {
     padding: 20px;
 }
 
-.form-buttons {
+#login-user-modal form button {
+    padding: 0;
+    border: none;
+    text-decoration: underline;
+    align-self: end;
+    width: 160px;
+    margin-top: -14px;
+} #login-user-modal form button:hover {
+    box-shadow: none;
+  }
+
+  .form-buttons {
     display: flex;
     flex-direction: column;
     justify-content: center;

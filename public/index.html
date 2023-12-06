@@ -17,29 +17,34 @@
     </div>
 
     <!-- TODO: Make form wider and make mobile view stay same -->
-    <div id="create-user-modal" class="hidden">
-        <h2>Create new user</h2>
-        <form>
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="username here..." required>
+    <div id="backdrop" class="hidden">
+        <div id="create-user-modal" class="hidden">
+            <h2>Create new user</h2>
+            <form>
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="username here..." required>
 
-            <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="email here..." required>
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="email here..." required>
 
-            <label for="date-of-birth">Birth date</label>
-            <input type="date" id="date-of-birth" required>
+                <label for="date-of-birth">Birth date</label>
+                <input type="date" id="date-of-birth" required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="password here..." required>
-        </form>
-        <button id="create-user">Create User</button>
-        <button id="create-user-cancel">Cancel</button>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="password here..." required>
+
+                <!-- button is in form to enable auto-scroll on smaller height -->
+                <div class="create-user-buttons">
+                    <button id="create-user">Create User</button>
+                    <button id="create-user-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </header>
 
 <main>
-    <div id="backdrop" class="hidden"></div>
     <section class="filters">
         <h2>Filters</h2>
         <div>

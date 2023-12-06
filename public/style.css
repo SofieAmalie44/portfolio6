@@ -51,29 +51,53 @@ button {
       box-shadow: 0 0 10px rgba(0,0,0, .2);
   }
 
-#create-user-modal {
-    z-index: 3;
+#backdrop {
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
+    top: 0;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: rgba(0,0,0,0.3);
+}
+
+#create-user-modal {
+    display: flex;
     flex-direction: column;
-    gap: 24px;
-    top: 10dvh;
-    width: 50%;
-    max-width: 300px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-two);
+    margin: auto;
     padding: 30px;
-    background-color: lightgray;
     border: 2px solid var(--color-one);
+    overflow: auto; /* Enable scroll if needed */
+    position: relative;
+    max-height: 75dvh;
+    max-width: 400px;
+    width: 100%;
+    gap: 20px;
 }
 
 #create-user-modal form {
+    overflow: auto;
     width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: start;
     padding-top: 10px;
+}
+
+.create-user-buttons {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
 }
 
 #create-user-modal form input {
@@ -153,12 +177,4 @@ main {
 
 .cafes li span:nth-child(1) {
     font-weight: bold;
-}
-
-#backdrop {
-    position: absolute;
-    top: 0;
-    min-height: 100dvh;
-    min-width: 100dvw;
-    background-color: rgba(0,0,0,0.5);
 }

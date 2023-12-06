@@ -1,5 +1,6 @@
 const frontPageCreateUserButton = document.querySelector('#front-create-user');
 const frontPageLogInUserButton = document.querySelector('#front-log-in');
+const headerButtonsElement = document.querySelector('.header-buttons');
 
 // Create user modal elements here:
 const userModalElement = document.querySelector('#create-user-modal');
@@ -65,6 +66,7 @@ function createNewUser() {
         if (response.ok) {
             console.log('User created successfully');
             toggleCreateUserModal();
+            changeToLoggedIn();
             // TODO: What to do after user creation?
         } else {
             console.error('Something went wrong:', response.statusText);
@@ -96,6 +98,7 @@ function loginUser() {
         if (response.ok) {
             console.log('User logged in successfully');
             toggleLogInUserModal();
+            changeToLoggedIn();
             // TODO: What to do after user logged in?
         } else {
             console.error('Something went wrong:', response.statusText);
@@ -109,6 +112,15 @@ function loginUser() {
             console.error('Unhandled error:', error);
         }
     });
+}
+
+function changeToLoggedIn() {
+    toggleHeaderButtons();
+    // TODO: Add profile icon and functionality
+}
+
+function toggleHeaderButtons() {
+    headerButtonsElement.classList.toggle('hidden');
 }
 
 function toggleCreateUserModal() {

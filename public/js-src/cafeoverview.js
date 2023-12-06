@@ -9,50 +9,60 @@ fetch('/cafes')
         cafeArray.forEach(cafeObject => {
 
 
-            const cafeNavnLI = document.createElement('li');
+            const cafeLi = document.createElement('li');
             const spanHeader = document.createElement('span');
-
-            cafeNavnLI.setAttribute('id', "cafeNavnLI");
-
-
-            const priceLevelUL = document.createElement('ul');
+            const attributeUl = document.createElement('ul');
             const priceLevelLI = document.createElement('li');
+            const noiseLevelLI = document.createElement('li')
+            const avaliableWifiLI = document.createElement('li')
+            const offersFoodLI = document.createElement('li')
+            const checkEmoji = "✅"
+            const errorEmoji = "❌"
 
-            priceLevelUL.setAttribute('id', "priceLevelUL");
-            priceLevelLI.setAttribute('id', "priceLevelLI");
-
-
-
-
-            spanHeader.innerText = cafeObject.cafe_name;
+            spanHeader.innerText =  cafeObject.cafe_name
             priceLevelLI.innerText = cafeObject.price_level;
+            noiseLevelLI.innerText = "Noise level: " + cafeObject.noise_level;
+            avaliableWifiLI.innerText = cafeObject.avaliable_wifi
+            offersFoodLI.innerText = cafeObject.offer_food
 
 
+            if (cafeObject.available_wifi === 1) {
+                avaliableWifiLI.innerText = `WIFI: ${checkEmoji}`;
+            } else {
+                avaliableWifiLI.innerText = `WIFI: ${errorEmoji}`;
+            }
 
-            cafeNavnLI.appendChild(spanHeader);
-            cafeUl.appendChild(cafeNavnLI);
-            priceLevelUL.appendChild(cafeNavnLI);
-            priceLevelLI.appendChild(priceLevelUL);
+            if (cafeObject.offer_food === 1) {
+                offersFoodLI.innerText = `Food availability: ${checkEmoji}`;
+            } else {
+                offersFoodLI.innerText = `Food availability: ${errorEmoji}`;
+            }
+
+
+            if (cafeObject.price_level === "low"){
+                   priceLevelLI.innerText = "Price level: $"
+            } else if (cafeObject.price_level === "low-medium"){
+                   priceLevelLI.innerText = "Price level: $$"
+            } else if (cafeObject.price_level === "medium"){
+                       priceLevelLI.innerText = "Price level: $$$"
+            } else if (cafeObject.price_level === "medium-high"){
+                priceLevelLI.innerText = "Price level: $$$$"
+            } else if (cafeObject.price_level === "high") {
+                priceLevelLI.innerText = "Price level: $$$$$"
+            }
+
+
+            console.log(noiseLevelLI)
+            console.log(avaliableWifiLI)
+            console.log(offersFoodLI)
+
+
+            cafeLi.appendChild(spanHeader);
+            attributeUl.appendChild(priceLevelLI);
+            attributeUl.appendChild(noiseLevelLI)
+            attributeUl.appendChild(avaliableWifiLI)
+            attributeUl.appendChild((offersFoodLI))
+            cafeLi.appendChild(attributeUl);
+            cafeUl.appendChild(cafeLi);
         });
     });
-
-/*  spanHeader.innerText = `cafe${i}`;
-spanPriceLevel.innerText = `price${i}`;
-
-
-li.appendChild(spanPriceLevel)
-
-ul.appendChild(li)
-})
-
-
-spanHeader.innerText = `cafe${i}`;
-spanPriceLevel.innerText = `price${i}`;
-
-li.appendChild(spanHeader)
-li.appendChild(spanPriceLevel)
-
-ul.appendChild(li)
-*/
-
-

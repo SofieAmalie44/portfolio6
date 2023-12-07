@@ -226,9 +226,6 @@ app.get('*',(req,res) =>{
 
 // Starting the Express server on the specified port (8080)
 app.listen(PORT, () => {
-    console.log(`it's alive on http://localhost:${PORT}`)
+        console.log(`it's alive on http://localhost:${PORT}`)
     }
 ); // setting up a responsive api, with a message in the terminal.
-
-
-

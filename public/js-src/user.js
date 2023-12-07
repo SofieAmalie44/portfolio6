@@ -54,10 +54,9 @@ function createNewUser() {
     const username = modalCreateUserUsernameInput.value;
     const email = modalCreatedUserEmailInput.value;
     const birthDate = modalCreateUserBirthdateInput.value;
-    // TODO: Password RegEx try catch
     const password = modalCreateUserPasswordInput.value;
 
-    if(isValidCreateUserInput){
+    if(!isValidCreateUserInput(username, email, birthDate, password)){
         return;
     }
 
@@ -92,21 +91,59 @@ function createNewUser() {
 }
 
 function isValidCreateUserInput(username, email, birthDate, password) {
+    let hasError = false;
+
     if (isValidUsername(username) === false) {
-        console.log('username should be between 8-100 characters')
+        console.log('Username should be a-z, A-Z, 8-100 characters.');
+        hasError = true;
     }
 
+    if (isValidEmail(email) === false) {
+        console.log('Email should be a-z, A-Z, 0-9, @, and have a correct format.');
+        hasError = true;
+    }
+
+    if (isValidBirthDate(birthDate) === false) {
+        console.log('Invalid birth date; please check the format or specific rules.');
+        hasError = true;
+    }
+
+    if (isValidPassword(password) === false) {
+        console.log('Password should be 8 or more characters.');
+        hasError = true;
+    }
+
+    return !hasError;
 }
 
 function isValidUsername(username) {
-    const regexPatteren = /^[a-zA-Z0-9]+$/; // Only letters and numbers
+    const regexPatteren = /^[a-zA-Z0-9]+$/; // allowed: a-z, A-Z, 0-9
     const isValidLength = username.length <= 8 && username.length <= 100;
 
     return regexPatteren.test(username) && isValidLength;
 }
 
+/**
+Uppercase: (A-Z)
+Lowercase: (a-z)
+Digits: (0-9)
+Characters: ! # $ % & ' * + - / = ? ^ _ ` { | } ~
+Character: period or dot check
+RegEx found here: https://www.w3resource.com/javascript/form/email-validation.php
+*/
 function isValidEmail(email) {
+    const regexPatteren = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
+    return regexPatteren.test(email);
+}
+
+function isValidBirthDate(birthDate) {
+    // TODO: what to check for here?
+    return true;
+}
+
+function isValidPassword(password) {
+    return password.length >= 8;
 }
 
 function loginUser() {

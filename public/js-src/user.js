@@ -57,6 +57,10 @@ function createNewUser() {
     // TODO: Password RegEx try catch
     const password = modalCreateUserPasswordInput.value;
 
+    if(isValidCreateUserInput){
+        return;
+    }
+
     fetch("/users/new", {
         method: 'POST',
         headers: {
@@ -85,6 +89,24 @@ function createNewUser() {
             console.error('Unhandled error:', error);
         }
     });
+}
+
+function isValidCreateUserInput(username, email, birthDate, password) {
+    if (isValidUsername(username) === false) {
+        console.log('username should be between 8-100 characters')
+    }
+
+}
+
+function isValidUsername(username) {
+    const regexPatteren = /^[a-zA-Z0-9]+$/; // Only letters and numbers
+    const isValidLength = username.length <= 8 && username.length <= 100;
+
+    return regexPatteren.test(username) && isValidLength;
+}
+
+function isValidEmail(email) {
+
 }
 
 function loginUser() {

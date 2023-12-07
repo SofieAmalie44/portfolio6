@@ -93,23 +93,23 @@ function createNewUser() {
 function isValidCreateUserInput(username, email, birthDate, password) {
     let hasError = false;
 
-    if (isValidUsername(username) === false) {
-        console.log('Username should be a-z, A-Z, 8-100 characters.');
+    if (!isValidUsername(username)) {
+        displayInputfieldError(modalCreateUserUsernameInput, 'a-z, A-Z, 8-24 characters.');
         hasError = true;
     }
 
-    if (isValidEmail(email) === false) {
-        console.log('Email should be a-z, A-Z, 0-9, @, and have a correct format.');
+    if (!isValidEmail(email)) {
+        displayInputfieldError(modalCreatedUserEmailInput, 'Invalid email format');
         hasError = true;
     }
 
-    if (isValidBirthDate(birthDate) === false) {
-        console.log('Invalid birth date; please check the format or specific rules.');
+    if (!isValidBirthDate(birthDate)) {
+        displayInputfieldError(modalCreateUserBirthdateInput, 'Invalid birth date');
         hasError = true;
     }
 
-    if (isValidPassword(password) === false) {
-        console.log('Password should be 8 or more characters.');
+    if (!isValidPassword(password)) {
+        displayInputfieldError(modalCreateUserPasswordInput, '8 or more characters');
         hasError = true;
     }
 
@@ -118,9 +118,9 @@ function isValidCreateUserInput(username, email, birthDate, password) {
 
 function isValidUsername(username) {
     const regexPatteren = /^[a-zA-Z0-9]+$/; // allowed: a-z, A-Z, 0-9
-    const isValidLength = username.length <= 8 && username.length <= 100;
+    const isValidLength = username.length <= 8 && username.length <= 24;
 
-    return regexPatteren.test(username) && isValidLength;
+    return !(regexPatteren.test(username) || isValidLength);
 }
 
 /**
@@ -144,6 +144,12 @@ function isValidBirthDate(birthDate) {
 
 function isValidPassword(password) {
     return password.length >= 8;
+}
+
+function displayInputfieldError(inputElement, errorMessage) {
+    inputElement.value = '';
+    inputElement.classList.add('error-inputfield');
+    inputElement.placeholder = errorMessage;
 }
 
 function loginUser() {

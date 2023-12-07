@@ -15,10 +15,17 @@ body {
     display: none !important;
 }
 
+.error-inputfield {
+    border-color: var(--color-four);
+} .error-inputfield::placeholder {
+    color: var(--color-four);
+  }
+
 :root {
     --color-one: black;
     --color-two: white;
     --color-three: lightgray;
+    --color-four: red;
 }
 
 /*********************************************/

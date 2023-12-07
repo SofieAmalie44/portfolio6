@@ -12,6 +12,7 @@ const modalCreateUserUsernameInput = document.querySelector('#create-username');
 const modalCreatedUserEmailInput = document.querySelector('#create-email');
 const modalCreateUserPasswordInput = document.querySelector('#create-password');
 const modalCreateUserBirthdateInput = document.querySelector('#create-user-modal #date-of-birth');
+const modalCreateUserUsernameLabel = document.querySelector('#create-user-modal form label');
 
 // Log in user modal elements here:
 const loginModalElement = document.querySelector('#login-user-modal');
@@ -83,7 +84,7 @@ function createNewUser() {
         }
     }).catch(error => {
         if (error === 403) {
-            console.log('User exists');
+            modalCreateUserUsernameLabel.innerText = 'Username - name or email already in use';
         } else {
             console.error('Unhandled error:', error);
         }
@@ -120,7 +121,7 @@ function isValidUsername(username) {
     const regexPatteren = /^[a-zA-Z0-9]+$/; // allowed: a-z, A-Z, 0-9
     const isValidLength = username.length <= 8 && username.length <= 24;
 
-    return !(regexPatteren.test(username) || isValidLength);
+    return !(regexPatteren.test(username) && isValidLength);
 }
 
 /**
@@ -178,7 +179,7 @@ function loginUser() {
     }).catch(error => {
         if (error === 401) {
             console.log('username/email or password is incorrect');
-            // TODO: Maybe switch to create user?
+
         } else {
             console.error('Unhandled error:', error);
         }

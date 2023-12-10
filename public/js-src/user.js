@@ -1,7 +1,9 @@
 const frontPageCreateUserButton = document.querySelector('#front-create-user');
 const frontPageLogInUserButton = document.querySelector('#front-log-in');
 const headerButtonsElement = document.querySelector('.header-buttons');
-const profileButton = document.querySelector('#profile');
+const profile = document.querySelector("#profile");
+const profileButton = document.querySelector('#profileButton');
+const profileDetails = document.querySelector("#profile-details")
 
 // Create user modal elements here:
 const userModalElement = document.querySelector('#create-user-modal');
@@ -46,6 +48,8 @@ modalLoginUserPasswordInput.addEventListener("keypress", (event) => {
         modalLoginUserButton.click();
     }
 });
+
+profileButton.addEventListener("click", toggleProfileDetails)
 
 /***************************************************/
 /***************************************************/
@@ -134,7 +138,7 @@ RegEx found here: https://www.w3resource.com/javascript/form/email-validation.ph
 */
 function isValidEmail(email) {
     const regexPatteren = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
+// reguler expression (testing if the email is valid
     return regexPatteren.test(email);
 }
 
@@ -153,48 +157,69 @@ function displayInputfieldError(inputElement, errorMessage) {
     inputElement.placeholder = errorMessage;
 }
 
-function loginUser() {
+async function loginUser() {
     const usernameOrEmail = modalLoginUsernameOrEmailInput.value;
     const password = modalLoginUserPasswordInput.value;
 
-    fetch("/users/login", {
+    const userResponse = await fetch("http://localhost:8080/users/login", {
         method: 'POST',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify({
             "usernameOrEmail": usernameOrEmail,
             "password": password
         })
-    }).then(response => {
-        if (response.ok) {
-            console.log('User logged in successfully');
-            toggleLogInUserModal();
-            changeToLoggedIn();
-            // TODO: What to do after user logged in?
-        } else {
-            console.error('Something went wrong:', response.statusText);
-            return Promise.reject(response.status); // Reject the promise with the status
-        }
     }).catch(error => {
         if (error === 401) {
             console.log('username/email or password is incorrect');
-
         } else {
             console.error('Unhandled error:', error);
         }
+        return Promise.reject(response.status);
     });
+
+    // TODO: What to do after user logged in?
+
+    if (userResponse.ok) {
+        console.log('User logged in successfully');
+        toggleLogInUserModal();
+        changeToLoggedIn();
+
+        const user = await userResponse.json();
+
+        console.log("User: " + user.username);
+        console.log("Email: " + user.email);
+        console.log("Phone number: " + user.phone_number);
+        console.log("Postal code" + user.postalcode);
+        console.log("Birthday: " + user.date_of_birth);
+
+        document.querySelector("#profile-user-name").innerHTML = user.username;
+        document.querySelector("#profile-email").innerHTML = user.email;
+        document.querySelector("#profile-phone-number").innerHTML = user.phone_number;
+        document.querySelector("#profile-postal-code").innerHTML = user.postalcode;
+        document.querySelector("#profile-date-of-birth").innerHTML = user.date_of_birth;
+
+    } else {
+        console.error('Something went wrong:', userResponse.statusText);
+    }
+
 }
 
 function changeToLoggedIn() {
     toggleHeaderButtons();
-    toggleProfileButton();
-    // TODO: Add profile icon and functionality
+    toggleProfile();
 }
 
-function toggleProfileButton() {
-    profileButton.classList.toggle('hidden')
+function toggleProfile() {
+    profile.classList.toggle('hidden')
 }
+
+function toggleProfileDetails() {
+    profileDetails.classList.toggle("hidden")
+}
+
 function toggleHeaderButtons() {
     headerButtonsElement.classList.toggle('hidden');
 }

@@ -38,11 +38,12 @@ db.connect(error => {
 });
 
 // Endpoint to get all cafes
-app.get('/cafes', (req, res) => {
-    const query = 'SELECT * FROM cafes';
+app.get('/cafe/:id', (req, res) => {
+    const cafe_id = req.params.id;
+    const query = 'SELECT * FROM cafes WHERE cafe_id = ?';
 
     // Executing the query
-    db.query(query, (error, results) => {
+    db.query(query, cafe_id, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -53,11 +54,43 @@ app.get('/cafes', (req, res) => {
 });
 
 // Endpoint to get any cafe through the id
-app.get('/cafe/:id', (req, res) => {
-    const id = req.params.id;
-    const query = 'SELECT * FROM cafes WHERE cafe_id = ?';
+app.get('/cafe', (req, res) => {
 
-    db.query(query, [id], (error, result) => {
+    const noiseLevel = req.query.noiseLevel;
+    const priceLevel = req.query.priceLevel;
+    const wifiAvailable = req.query.wifiAvailable;
+    const foodAvailable = req.query.foodAvailable;
+
+    let whereFilter = undefined;
+    let filters = []
+
+    if (noiseLevel) {
+        filters.push("noise_level = '" + noiseLevel + "'");
+    }
+
+    if (priceLevel) {
+        filters.push("price_level = '" + priceLevel + "'");
+    }
+
+    if (wifiAvailable) {
+        filters.push("available_wifi = ".concat('yes' === wifiAvailable));
+    }
+
+    if(foodAvailable) {
+        filters.push("offer_food = ".concat('yes' === foodAvailable));
+    }
+
+    if (filters.length > 0) {
+        filters.forEach(f => {
+            if (whereFilter)
+                whereFilter = whereFilter.concat(' and ').concat(f);
+            else
+                whereFilter = 'where ' + f;
+        });
+    }
+    const query = "SELECT * FROM cafes " + whereFilter; <!-- TODO: Make query to inner join favorits table and cafes (group by)  -->
+
+    db.query(query, (error, result) => {
         if (error) {
             console.error('Error finding cafe:', error);
             res.status(500).send('Internal Server Error ' +  error);
@@ -131,7 +164,7 @@ app.post('/users/login', (req, res) => {
         if (results.length > 0) {
 
             // Check if password is correct
-            const queryPasswordCheck = 'SELECT user_id FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
+            const queryPasswordCheck = 'SELECT username, email, phone_number, postalcode, date_of_birth FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
             db.query(queryPasswordCheck, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
                 if (error) {
                     console.error('Error logging in user:', error);
@@ -140,7 +173,7 @@ app.post('/users/login', (req, res) => {
                 }
 
                 if (results.length > 0) {
-                    res.status(200).send('Login successful');
+                    res.status(200).send(results[0]);
                 } else {
                     res.status(401).send('Incorrect password');
                 }

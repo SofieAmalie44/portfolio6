@@ -16,9 +16,23 @@
         <button id="front-log-in">Log in</button>
     </div>
 
-    <button class="hidden" id="profile">
-        <span>👤</span>
-    </button>
+    <div class="hidden" id="profile">
+        <button id="profileButton">
+            <span>👤</span>
+        </button>
+        <div class="modal hidden" id="profile-details">
+            <div>User name:</div>
+            <div id="profile-user-name"></div>
+            <div>Email:</div>
+            <div id="profile-email"></div>
+            <div>Phone number:</div>
+            <div id="profile-phone-number"></div>
+            <div>Postal code:</div>
+            <div id="profile-postal-code"></div>
+            <div>Birthday:</div>
+            <div id="profile-date-of-birth"></div>
+        </div>
+    </div>
 
     <div id="create-backdrop" class="hidden">
         <div id="create-user-modal" class="modal hidden">
@@ -67,21 +81,57 @@
 <main>
     <section class="filters">
         <h2>Filters</h2>
-        <div>
+
+        <div class="priceLevel">
             <label for="price-level">Price Level:</label>
-            <select id="price-level"> <!-- TODO: Load this dynamically -->
+            <select id="price-level">
                 <option value="low">low</option>
                 <option value="low-medium">low-medium</option>
                 <option value="medium">medium</option>
                 <option value="medium-high">medium-high</option>
                 <option value="high">high</option>
+                <option value="">none</option>
             </select>
         </div>
+        <div class="noiseLevel">
+            <label for="noise-level">Noise Level:</label>
+            <select id="noise-level">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="">none</option>
+            </select>
+        </div>
+        <div class="wifiAvailable">
+            <label for="wifi-available">Wifi availability:</label>
+            <select id="wifi-available">
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+                <option value="">none</option>
+            </select>
+        </div>
+        <div class="foodAvailable">
+            <label for="food-available">Food offer:</label>
+            <select id="food-available">
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+                <option value="">none</option>
+            </select>
+        </div>
+
+        <button onclick="fetchCafes()">Show cafes</button>
+
     </section>
     <section class="cafes">
         <h2>Cafes Overview</h2>
-        <ul></ul>
+        <ul class="cafe-overview"></ul>
+
     </section>
+
+    <!--TODO: add favorites -->
+
 </main>
 
 <footer>

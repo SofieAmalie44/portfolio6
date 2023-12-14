@@ -1,13 +1,11 @@
-const cafeUl = document.querySelector('.cafes ul');
 
-const spanPriceLevel = document.createElement('span');
+const cafeUl = document.querySelector('.cafes ul');
+const loadingScreen = document.querySelector('#loading-screen')
+
 
 function fetchCafes() {
     cafeUl.innerHTML = '';
     // fetch filter options <!-- TODO: Load this dynamically -->
-
-
-    loadingScreen.style.display = 'none';
 
 
     const priceLevelSelect = document.querySelector("#price-level");
@@ -52,24 +50,29 @@ function fetchCafes() {
 
                 const checkEmoji = "✅"
                 const errorEmoji = "❌"
+
                 const cafeLi = document.createElement('li');
                 cafeLi.setAttribute("class", "cafeLi");
                 const spanHeader = document.createElement('span');
                 spanHeader.setAttribute("id", "spanCafeName");
+
                 const attributeUl = document.createElement('ul');
                 const priceLevelLI = document.createElement('li');
                 const noiseLevelLI = document.createElement('li');
-                const avaliableWifiLI = document.createElement('li');
+                const availableWifiLI = document.createElement('li');
                 const offersFoodLI = document.createElement('li');
                 const locationLi = document.createElement('li');
                 const descriptionBox = document.createElement("span");
                 descriptionBox.setAttribute("class", "descriptionSpan");
                 const likeButton = document.createElement('button');
                 likeButton.setAttribute('class', 'likeButton');
-                const favoriteAttribute = document.createElement('span');
-                favoriteAttribute.setAttribute("id", "favoriteAttribute_" + cafeObject.cafe_id);
+                likeButton.setAttribute("id", "likeButton_" + cafeObject.cafe_id);
+                //const favoriteAttribute = document.createElement('span');
+                //favoriteAttribute.setAttribute("id", "favoriteAttribute_" + cafeObject.cafe_id);
+                //favoriteAttribute.setAttribute('class', 'favoriteAttribute');
                 const favoriteNumber = document.createElement('span');
                 favoriteNumber.setAttribute('id', 'favoriteNumber_' + cafeObject.cafe_id);
+                favoriteNumber.setAttribute('class', 'favoriteNumber');
                 const viewDetailsButton = document.createElement("button");
                 viewDetailsButton.setAttribute("class", "viewDetailsButton");
                 const cafeDetails = document.createElement("div");
@@ -78,19 +81,20 @@ function fetchCafes() {
                 spanHeader.innerText = cafeObject.cafe_name
                 priceLevelLI.innerText = cafeObject.price_level;
                 noiseLevelLI.innerText = "Noise level: " + cafeObject.noise_level;
-                avaliableWifiLI.innerText = cafeObject.avaliable_wifi;
+                availableWifiLI.innerText = cafeObject.avaliable_wifi;
                 offersFoodLI.innerText = cafeObject.offer_food;
                 locationLi.innerText = "Location: " + cafeObject.area;
                 descriptionBox.innerText = cafeObject.description;
-                favoriteAttribute.innerText = "♥️";
+                //favoriteAttribute.innerText = "♡";
+                likeButton.innerText = "♡";
                 favoriteNumber.innerText = cafeObject.favorite_count;
                 viewDetailsButton.innerText = "View details";
 
 
                 if (cafeObject.available_wifi === 1) {
-                    avaliableWifiLI.innerText = `WIFI: ${checkEmoji}`;
+                    availableWifiLI.innerText = `WIFI: ${checkEmoji}`;
                 } else {
-                    avaliableWifiLI.innerText = `WIFI: ${errorEmoji}`;
+                    availableWifiLI.innerText = `WIFI: ${errorEmoji}`;
                 }
 
                 if (cafeObject.offer_food === 1) {
@@ -114,20 +118,21 @@ function fetchCafes() {
 
 
                 cafeLi.appendChild(spanHeader);
+                likeButton.appendChild(favoriteNumber);
                 spanHeader.appendChild(likeButton);
-                likeButton.appendChild(favoriteAttribute);
-                spanHeader.appendChild(favoriteNumber);
+                //likeButton.appendChild(favoriteAttribute);
                 attributeUl.appendChild(priceLevelLI);
                 attributeUl.appendChild(noiseLevelLI);
-                attributeUl.appendChild(avaliableWifiLI);
+                attributeUl.appendChild(availableWifiLI);
                 attributeUl.appendChild((offersFoodLI));
                 attributeUl.appendChild(locationLi)
                 cafeLi.appendChild(descriptionBox);
-                cafeLi.appendChild(attributeUl);
+                cafeDetails.appendChild(attributeUl);
                 cafeLi.appendChild(viewDetailsButton);
                 cafeLi.appendChild(cafeDetails);
                 cafeUl.appendChild(cafeLi);
 
+                loadingScreen.style.display = 'none';
 
                 viewDetailsButton.addEventListener('click', showCafeDetails);
                 viewDetailsButton.cafeIdParam = cafeObject.cafe_id;
@@ -135,6 +140,8 @@ function fetchCafes() {
 
                 likeButton.addEventListener('click', createNewLike)
                 likeButton.cafeIdParam = cafeObject.cafe_id;
+
+
 
             });
             updateWithFavorites()
@@ -145,9 +152,12 @@ function fetchCafes() {
 function updateWithFavorites() {
     if (favorites) {
         favorites.forEach(fav => {
-            const favoriteAttribute = document.querySelector("#favoriteAttribute_" + fav.cafe_id);
-            if (favoriteAttribute) {
-                favoriteAttribute.innerText = "🎉"
+            const favoriteNumber = document.querySelector("#favoriteNumber_" + fav.cafe_id);
+            const likeButton = document.querySelector("#likeButton_" + fav.cafe_id);
+            if (likeButton) {
+                likeButton.innerText = "♥️"
+                likeButton.appendChild(favoriteNumber);
+                likeButton.addEventListener('click', unLike);
             }
         })
     }
@@ -161,13 +171,8 @@ async function createNewLike(event) {
     }
 
     const cafeId = event.currentTarget.cafeIdParam;
-    console.log("Fetching cafeId:" + cafeId);
-    const cafeDetails = document.querySelector("#cafeDetails_" + cafeId);
-
-    document.getElementById('coffee.gif').style.visibility = 'visible';
-
-    const cafeResponse = await fetch("http://localhost:8080/cafe/" + cafeId, {
-        method: 'GET',
+    const likeResponse = await fetch("http://localhost:8080/favorites/new", {
+        method: 'POST',
         headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -176,22 +181,64 @@ async function createNewLike(event) {
             "cafeId": cafeId,
             "userId": user.user_id
         })
-
     }).catch(error => {
-            console.error('Unhandled error:', error);
-        return Promise.reject(response.status);
+        console.error('Unhandled error:' + error);
+        return Promise.reject(likeResponse.status);
     })
 
 
     const likes = await likeResponse.json();
 
-    const favoriteAttribute = document.querySelector("#favoriteAttribute_" + cafeId);
-    if (favoriteAttribute) {
-        favoriteAttribute.innerText = "🎉"
-    }
     const favoriteNumber = document.querySelector("#favoriteNumber_" + cafeId);
     if (favoriteNumber) {
         favoriteNumber.innerText =  likes[0].count_all;
+    }
+
+    const likeButton = document.querySelector("#likeButton_" + cafeId);
+    if (likeButton) {
+        likeButton.innerText = "♥️"
+        likeButton.appendChild(favoriteNumber);
+        likeButton.removeEventListener('click', createNewLike);
+        likeButton.addEventListener('click', unLike);
+    }
+}
+
+async function unLike(event) {
+    if(!user) {
+        console.log('User not logged in!');
+        return;
+    }
+
+    const cafeId = event.currentTarget.cafeIdParam;
+    const unlikeResponse = await fetch("http://localhost:8080/favorites/delete", {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            "cafeId": cafeId,
+            "userId": user.user_id
+        })
+    }).catch(error => {
+        console.error('Unhandled error:' + error);
+        return Promise.reject(unlikeResponse.status);
+    })
+
+
+    const likes = await unlikeResponse.json();
+
+    const favoriteNumber = document.querySelector("#favoriteNumber_" + cafeId);
+    if (favoriteNumber) {
+        favoriteNumber.innerText =  likes[0].count_all;
+    }
+
+    const likeButton = document.querySelector("#likeButton_" + cafeId);
+    if (likeButton) {
+        likeButton.innerText = "♡"
+        likeButton.appendChild(favoriteNumber);
+        likeButton.removeEventListener('click', unLike);
+        likeButton.addEventListener('click', createNewLike);
     }
 }
 

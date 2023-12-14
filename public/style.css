@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     font-family: 'WoltHeading-Omnes', "Helvetica Neue", sans-serif;
-    background-color: white;
 }
 
 body {
@@ -279,11 +278,29 @@ main {
 .cafe-overview #spanCafeName {
     font-size: 25px;
     margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.cafe-overview #favoriteAttribute {
-    font-size: 30px;
-    margin-left: 780px;
+.cafe-overview .likeButton {
+    float: right;
+    border: none;
+    font-size: 35px;
+    padding: 0;
+} .likeButton:hover {
+      transform: none;
+      box-shadow: none;
+  }
+
+.cafe-overview .favoriteNumber {
+    float: right;
+    font-size: 17px;
+}
+
+.cafe-overview .favoriteAttribute {
+    font-size: 35px;
 }
 
 .cafe-overview .descriptionSpan {

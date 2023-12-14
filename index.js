@@ -248,7 +248,7 @@ app.get('/nameByNumber/:number', (req, res) => {
 });
 
 
-// Endpoint to get all favorite id with an assigned user id as parameter
+// Endpoint that inserts / register a cafe_id as a favorite for a given user_id
 app.post('/favorites/new', (req, res) => {
     const cafeId = req.body.cafeId;
     const userId = req.body.userId;
@@ -274,8 +274,33 @@ app.post('/favorites/new', (req, res) => {
         });
 });
 
+app.post('/favorites/delete', (req, res) => {
+    const cafeId = req.body.cafeId;
+    const userId = req.body.userId;
 
-// Endpoint that counts how many times a cafe have benn marked as favorite and takes the cafe id as parameter
+    db.query('DELETE FROM favorites WHERE cafe_id = ? AND user_id = ?',
+        [cafeId, userId],
+        (error) => {
+            if (error) {
+                console.error('Error deleting favorite:', error);
+                res.status(500).send('Internal Server Error ' +  error);
+            } else {
+                db.query('SELECT count(*) AS count_all FROM favorites WHERE cafe_id = ?',
+                    [cafeId],
+                    (error, results) => {
+                        if (error) {
+                            console.error('Error selecting favorite count:', error);
+                            res.status(500).send('Internal Server Error ' +  error);
+                        } else {
+                            res.status(200).send(results);
+                        }
+                    });
+            }
+        });
+});
+
+
+// Endpoint that returns favorites by cafe id that the user id has liked   IN USE
 app.get('/cafeFavorites/:userId', (req, res) => {
     const userId = req.params.userId;
 

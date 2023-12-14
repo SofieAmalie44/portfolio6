@@ -4,6 +4,7 @@ const headerButtonsElement = document.querySelector('.header-buttons');
 const profile = document.querySelector("#profile");
 const profileButton = document.querySelector('#profileButton');
 const profileDetails = document.querySelector("#profile-details");
+const logOutButton = document.querySelector("#logOut");
 
 const favoritesFilter = document.querySelector(".showFavorites");
 
@@ -51,7 +52,8 @@ modalLoginUserPasswordInput.addEventListener("keypress", (event) => {
     }
 });
 
-profileButton.addEventListener("click", toggleProfileDetails)
+profileButton.addEventListener("click", toggleProfileDetails);
+logOutButton.addEventListener('click', logOut);
 
 let favorites = undefined;
 let user = undefined;
@@ -176,7 +178,7 @@ async function fetchUserFavorites(user_id) {
         favorites = await favResponse.json();
         console.log("Favorites:" + favorites);
     } else {
-        console.error('Something went wrong:', userResponse.statusText);
+        console.error('Something went wrong:', favResponse.statusText);
     }
 }
 
@@ -200,7 +202,7 @@ async function loginUser() {
         } else {
             console.error('Unhandled error:', error);
         }
-        return Promise.reject(response.status);
+        return Promise.reject(userResponse.status);
     });
 
     // TODO: What to do after user logged in?
@@ -233,9 +235,16 @@ async function loginUser() {
 
 }
 
+async function logOut(){
+
+    console.log('User logged out successfully')
+   location.reload();
+}
+
 function changeToLoggedIn() {
     toggleHeaderButtons();
     toggleProfile();
+    toggleLogOutButton()
 }
 
 function toggleProfile() {
@@ -248,6 +257,10 @@ function toggleFilterFavorites() {
 
 function toggleProfileDetails() {
     profileDetails.classList.toggle("hidden");
+}
+
+function toggleLogOutButton() {
+    logOutButton.classList.toggle("hidden");
 }
 
 function toggleHeaderButtons() {

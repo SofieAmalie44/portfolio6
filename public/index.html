@@ -9,8 +9,10 @@
 </head>
 <body>
 <header>
-    <h1>CPH Study Cafe Finder</h1>
-
+    <div class="webTitle">
+        <img id="coffeeLogo" src="coffeelogo.png" alt="website logo - Picture of a coffee cup">
+        <h1>CPH Study Cafe Finder</h1>
+    </div>
     <div class="header-buttons">
         <button id="front-create-user">Create user</button>
         <button id="front-log-in">Log in</button>
@@ -91,7 +93,6 @@
                 <option value="medium">medium</option>
                 <option value="medium-high">medium-high</option>
                 <option value="high">high</option>
-
             </select>
         </div>
         <div class="noiseLevel">
@@ -112,7 +113,6 @@
                 <option value="">none</option>
                 <option value="yes">yes</option>
                 <option value="no">no</option>
-
             </select>
         </div>
         <div class="foodAvailable">
@@ -149,7 +149,10 @@
     <section class="cafes">
         <h2>Cafes Overview</h2>
         <ul class="cafe-overview"></ul>
-
+        <div id="loading-screen">
+            <img id="coffeeGif" src="coffee.gif" alt="picture of different coffees" >
+            <h3>SELECT FILTERS TO SHOW CAFES</h3>
+        </div>
     </section>
 
     <!--TODO: add favorites -->

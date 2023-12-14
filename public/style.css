@@ -43,6 +43,21 @@ header {
     box-shadow: 0 0 10px rgba(0,0,0, .3);
 }
 
+.webTitle {
+    display: flex;
+    align-items: center;
+    padding-right: 20rem;
+}
+
+#coffeeLogo {
+    width: 200px;
+    height: auto;
+}
+
+h1 {
+    margin: 0;
+}
+
 .header-buttons {
     display: flex;
     justify-content: center;
@@ -57,10 +72,12 @@ header {
     height: 80%;
     aspect-ratio: 1/1;
     border-radius: 50%; /* Make it round */
+
 }
 
 #profile {
     position: relative;
+    padding-right: 40px;
 }
 
 #profile span {
@@ -79,7 +96,20 @@ button {
 
 #profile-details {
     position: absolute;
-  }
+    top: calc(100% + 10px); /* Adjust the distance below the symbol's bottom side */
+    left: calc(50% - 20px);
+    transform: translateX(-50%);
+    background-color: var(--color-two);
+    padding: 50px;
+    border: 2px solid var(--color-one);
+    max-height: 75vh;
+    max-width: 400px;
+    width: 100%;
+    gap: 20px;
+}  #profile:hover + #profile-details {
+       display: flex; /* display the modal when hovering over the profile button */
+   }
+
 
 #create-backdrop, #login-backdrop {
     position: fixed;
@@ -109,6 +139,11 @@ button {
     width: 100%;
     gap: 20px;
 }
+
+#profile-details.modal {
+    padding: 50px;
+}
+
 
 form {
     overflow: auto;
@@ -192,6 +227,16 @@ main {
     align-items: center;
     width: 100%;
     padding-top: 30px;
+}
+
+#coffeeGif {
+    width: 500px;
+}
+
+#loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .cafe-overview {

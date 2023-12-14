@@ -5,6 +5,11 @@ const spanPriceLevel = document.createElement('span');
 function fetchCafes() {
     cafeUl.innerHTML = '';
     // fetch filter options <!-- TODO: Load this dynamically -->
+
+
+    loadingScreen.style.display = 'none';
+
+
     const priceLevelSelect = document.querySelector("#price-level");
     const noiseLevelSelect = document.querySelector("#noise-level");
     const wifiAvailableSelect = document.querySelector("#wifi-available");
@@ -44,7 +49,6 @@ function fetchCafes() {
 
             console.log(cafeArray)
             cafeArray.forEach(cafeObject => {
-
 
                 const checkEmoji = "✅"
                 const errorEmoji = "❌"
@@ -109,12 +113,6 @@ function fetchCafes() {
                 }
 
 
-                console.log(noiseLevelLI)
-                console.log(avaliableWifiLI)
-                console.log(offersFoodLI)
-                console.log(locationLi)
-
-                cafeDetails.appendChild(attributeUl);
                 cafeLi.appendChild(spanHeader);
                 spanHeader.appendChild(likeButton);
                 likeButton.appendChild(favoriteAttribute);
@@ -125,6 +123,7 @@ function fetchCafes() {
                 attributeUl.appendChild((offersFoodLI));
                 attributeUl.appendChild(locationLi)
                 cafeLi.appendChild(descriptionBox);
+                cafeLi.appendChild(attributeUl);
                 cafeLi.appendChild(viewDetailsButton);
                 cafeLi.appendChild(cafeDetails);
                 cafeUl.appendChild(cafeLi);
@@ -162,9 +161,13 @@ async function createNewLike(event) {
     }
 
     const cafeId = event.currentTarget.cafeIdParam;
+    console.log("Fetching cafeId:" + cafeId);
+    const cafeDetails = document.querySelector("#cafeDetails_" + cafeId);
 
-    const likeResponse = await fetch("http://localhost:8080/favorites/new", {
-        method: 'POST',
+    document.getElementById('coffee.gif').style.visibility = 'visible';
+
+    const cafeResponse = await fetch("http://localhost:8080/cafe/" + cafeId, {
+        method: 'GET',
         headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json'

@@ -228,6 +228,7 @@ async function loginUser() {
         updateWithFavorites();
     } else {
         console.error('Something went wrong:', userResponse.statusText);
+        alert("User does not exist. Try again");
     }
 
 }

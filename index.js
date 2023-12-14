@@ -60,6 +60,9 @@ app.get('/cafe', (req, res) => {
     const priceLevel = req.query.priceLevel;
     const wifiAvailable = req.query.wifiAvailable;
     const foodAvailable = req.query.foodAvailable;
+    const locationArea = req.query.locationArea;
+    const favoritesFilter = req.query.favoritesFilter;
+    const userId = req.query.userId;
 
     let whereFilter = undefined;
     let filters = []
@@ -80,6 +83,17 @@ app.get('/cafe', (req, res) => {
         filters.push("offer_food = ".concat('yes' === foodAvailable));
     }
 
+    if (locationArea) {
+            filters.push("area.area = '" + locationArea + "'");
+    }
+
+    // TODO: favorites filter...
+    let favoritesJoin = 'LEFT OUTER ';
+    if(favoritesFilter && favoritesFilter === 'yes') {
+        favoritesJoin = 'INNER ';
+        filters.push("favorites.user_id =" + userId);
+    }
+
     if (filters.length > 0) {
         filters.forEach(f => {
             if (whereFilter)
@@ -87,8 +101,19 @@ app.get('/cafe', (req, res) => {
             else
                 whereFilter = 'where ' + f;
         });
+    } else {
+        whereFilter = '';
     }
-    const query = "SELECT * FROM cafes " + whereFilter; <!-- TODO: Make query to inner join favorits table and cafes (group by)  -->
+
+    const query =
+        "SELECT cafes.*, area.area as area, COUNT(favorites.cafe_id) as favorite_count FROM cafes " +
+        "LEFT OUTER JOIN area ON cafes.area_id = area.area_id " +
+        favoritesJoin + "JOIN favorites ON cafes.cafe_id = favorites.cafe_id " +
+        whereFilter +
+        " GROUP BY cafes.cafe_id " +
+        "ORDER BY cafes.cafe_id" ;
+
+    console.log(query)    ;
 
     db.query(query, (error, result) => {
         if (error) {
@@ -101,12 +126,12 @@ app.get('/cafe', (req, res) => {
 });
 
 
-// Endpoint to get any cafe with a noise level lower than the one requested.
-app.get('/noise/:number', (req, res) => {
-    const noiseNumber = parseInt(req.params.number);
-    const query = 'SELECT * FROM cafes WHERE noise_level < ?';
+// Endpoint 
+app.get('/cafe/:area', (req, res) => {
+    const area = parseInt(req.params.areas);
+    const query = 'SELECT area.area_id, area.area FROM cafes JOIN area ON cafes.area_id = area.area_id GROUP BY area.area_id ORDER BY area.area_id';
 
-    db.query(query, [noiseNumber], (error, result) => {
+    db.query(query, [area], (error, result) => {
         if (error) {
             console.error('Error finding noise_level:', error);
             res.status(500).send('Internal Server Error ' +  error);
@@ -164,7 +189,7 @@ app.post('/users/login', (req, res) => {
         if (results.length > 0) {
 
             // Check if password is correct
-            const queryPasswordCheck = 'SELECT username, email, phone_number, postalcode, date_of_birth FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
+            const queryPasswordCheck = 'SELECT user_id, username, email, phone_number, postalcode, date_of_birth FROM users WHERE (username = ? OR email = ?) AND `password` = ?';
             db.query(queryPasswordCheck, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
                 if (error) {
                     console.error('Error logging in user:', error);
@@ -224,30 +249,44 @@ app.get('/nameByNumber/:number', (req, res) => {
 
 
 // Endpoint to get all favorite id with an assigned user id as parameter
-app.get('/favorites/:id', (req, res) => {
-    const userId = req.params.id;
-    const query = 'SELECT * FROM favorites WHERE `user_id` = ?';
+app.post('/favorites/new', (req, res) => {
+    const cafeId = req.body.cafeId;
+    const userId = req.body.userId;
 
-    // Executing the query
-    db.query(query, [userId], (error, result) => {
-        res.send(result);
-    });
+    db.query('INSERT INTO favorites (cafe_id, user_id) VALUES (?, ?)',
+        [cafeId, userId],
+        (error) => {
+            if (error) {
+                console.error('Error inserting favorite:', error);
+                res.status(500).send('Internal Server Error ' +  error);
+            } else {
+                db.query('SELECT count(*) AS count_all FROM favorites WHERE cafe_id = ?',
+                    [cafeId],
+                    (error, results) => {
+                        if (error) {
+                            console.error('Error selecting favorite count:', error);
+                            res.status(500).send('Internal Server Error ' +  error);
+                        } else {
+                            res.status(200).send(results);
+                        }
+                    });
+            }
+        });
 });
 
 
 // Endpoint that counts how many times a cafe have benn marked as favorite and takes the cafe id as parameter
-app.get('/cafeFavoritesCount/:cafeId', (req, res) => {
-    const cafeId = req.params.cafeId;
+app.get('/cafeFavorites/:userId', (req, res) => {
+    const userId = req.params.userId;
 
-    db.query('SELECT COUNT(*) AS favoriteCount FROM favorites WHERE cafe_id = ?',
-        [cafeId],
+    db.query('SELECT cafe_id FROM favorites WHERE user_id = ?',
+        [userId],
         (error, result) => {
             if (error) {
                 console.error(error);
                 res.status(500).send("Internal Server Error");
             } else {
-                const favoriteCount = result[0].favoriteCount;
-                res.send({ cafeId, favoriteCount });
+                res.send(result);
             }
         });
 });

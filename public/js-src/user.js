@@ -3,7 +3,9 @@ const frontPageLogInUserButton = document.querySelector('#front-log-in');
 const headerButtonsElement = document.querySelector('.header-buttons');
 const profile = document.querySelector("#profile");
 const profileButton = document.querySelector('#profileButton');
-const profileDetails = document.querySelector("#profile-details")
+const profileDetails = document.querySelector("#profile-details");
+
+const favoritesFilter = document.querySelector(".showFavorites");
 
 // Create user modal elements here:
 const userModalElement = document.querySelector('#create-user-modal');
@@ -51,6 +53,8 @@ modalLoginUserPasswordInput.addEventListener("keypress", (event) => {
 
 profileButton.addEventListener("click", toggleProfileDetails)
 
+let favorites = undefined;
+let user = undefined;
 /***************************************************/
 /***************************************************/
 /***************************************************/
@@ -157,6 +161,25 @@ function displayInputfieldError(inputElement, errorMessage) {
     inputElement.placeholder = errorMessage;
 }
 
+async function fetchUserFavorites(user_id) {
+    const favResponse = await fetch("http://localhost:8080/cafeFavorites/" + user_id, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).catch(error => {
+        console.error('Unhandled error:', error);
+        return Promise.reject(response.status);
+    });
+
+    if (favResponse.ok) {
+        favorites = await favResponse.json();
+        console.log("Favorites:" + favorites);
+    } else {
+        console.error('Something went wrong:', userResponse.statusText);
+    }
+}
+
 async function loginUser() {
     const usernameOrEmail = modalLoginUsernameOrEmailInput.value;
     const password = modalLoginUserPasswordInput.value;
@@ -186,8 +209,9 @@ async function loginUser() {
         console.log('User logged in successfully');
         toggleLogInUserModal();
         changeToLoggedIn();
+        toggleFilterFavorites();
 
-        const user = await userResponse.json();
+        user = await userResponse.json();
 
         console.log("User: " + user.username);
         console.log("Email: " + user.email);
@@ -200,7 +224,8 @@ async function loginUser() {
         document.querySelector("#profile-phone-number").innerHTML = user.phone_number;
         document.querySelector("#profile-postal-code").innerHTML = user.postalcode;
         document.querySelector("#profile-date-of-birth").innerHTML = user.date_of_birth;
-
+        await fetchUserFavorites(user.user_id);
+        updateWithFavorites();
     } else {
         console.error('Something went wrong:', userResponse.statusText);
     }
@@ -213,11 +238,15 @@ function changeToLoggedIn() {
 }
 
 function toggleProfile() {
-    profile.classList.toggle('hidden')
+    profile.classList.toggle('hidden');
+}
+
+function toggleFilterFavorites() {
+    favoritesFilter.classList.toggle('hidden');
 }
 
 function toggleProfileDetails() {
-    profileDetails.classList.toggle("hidden")
+    profileDetails.classList.toggle("hidden");
 }
 
 function toggleHeaderButtons() {

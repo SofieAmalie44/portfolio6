@@ -247,6 +247,7 @@ main {
     justify-content: center;
     gap: 30px;
     width: 80%;
+
 }
 
 .cafe-overview .cafeLi {
@@ -306,4 +307,27 @@ main {
 .cafe-overview .descriptionSpan {
     color: #48484a;
     font-size: 17px;
+}
+
+.cafe-overview #noCafeFoundMessage {
+  font-size: 25px;
+    padding: 20px;
+    border: solid red;
+    margin-top: 5rem;
+}
+
+footer {
+    background: transparent;
+    position:fixed;
+    bottom:0px;
+    margin-top:5px;
+    left:0;
+    width:100%;
+    padding-top:10px;
+    padding-bottom:10px;
+    color:#666666;
+}
+
+footer span {
+    margin-left: 10px;
 }

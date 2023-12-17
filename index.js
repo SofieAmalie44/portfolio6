@@ -37,7 +37,11 @@ db.connect(error => {
     }
 });
 
-// Endpoint to get all cafes
+/**************************************************/
+/**************** CAFE END-POINTS *****************/
+/**************************************************/
+
+// Endpoint to get all cafes (NOT IN USE)
 app.get('/cafe/:id', (req, res) => {
     const cafe_id = req.params.id;
     const query = 'SELECT * FROM cafes WHERE cafe_id = ?';
@@ -53,7 +57,8 @@ app.get('/cafe/:id', (req, res) => {
     });
 });
 
-// Endpoint to get any cafe through the id
+
+// Endpoint to get any cafe through the id  (IN USE)
 app.get('/cafe', (req, res) => {
 
     const noiseLevel = req.query.noiseLevel;
@@ -126,7 +131,7 @@ app.get('/cafe', (req, res) => {
 });
 
 
-// Endpoint 
+// Endpoint to get area and area_id by inner joining table cafes and table area (NOT IN USE)
 app.get('/cafe/:area', (req, res) => {
     const area = parseInt(req.params.areas);
     const query = 'SELECT area.area_id, area.area FROM cafes JOIN area ON cafes.area_id = area.area_id GROUP BY area.area_id ORDER BY area.area_id';
@@ -176,6 +181,7 @@ app.post('/users/new', (req, res) => {
         });
 });
 
+
 // Endpoint to log in user by email or username (and password)
 // Use POST and not GET, to not expose user password in URL.
 app.post('/users/login', (req, res) => {
@@ -212,7 +218,7 @@ app.post('/users/login', (req, res) => {
 });
 
 
-// Endpoint to get any user email through the user id
+// Endpoint to get any user email through the user id (NOT IN USE)
 app.get('/email/:id', (req, res) => {
     const user_id = req.params.id;
     const query = 'SELECT email FROM users WHERE user_id = ?';
@@ -227,7 +233,8 @@ app.get('/email/:id', (req, res) => {
     });
 });
 
-// Endpoint that can display the username by the phone number af parameter
+
+// Endpoint that can display the username by the phone number af parameter (NOT IN USE)
 app.get('/nameByNumber/:number', (req, res) => {
     const userPhoneNumberRequest = req.params.number;
 
@@ -247,6 +254,10 @@ app.get('/nameByNumber/:number', (req, res) => {
         });
 });
 
+
+/********************************************************/
+/**************** FAVORITES END-POINTS *****************/
+/******************************************************/
 
 // Endpoint that inserts / register a cafe_id as a favorite for a given user_id
 app.post('/favorites/new', (req, res) => {
@@ -274,6 +285,8 @@ app.post('/favorites/new', (req, res) => {
         });
 });
 
+
+// Endpoints that deletes the favorite (like) when cafe_id and user_id is known
 app.post('/favorites/delete', (req, res) => {
     const cafeId = req.body.cafeId;
     const userId = req.body.userId;
@@ -300,7 +313,7 @@ app.post('/favorites/delete', (req, res) => {
 });
 
 
-// Endpoint that returns favorites by cafe id that the user id has liked   IN USE
+// Endpoint that returns favorites by cafe id that the user id has liked  ( IN USE )
 app.get('/cafeFavorites/:userId', (req, res) => {
     const userId = req.params.userId;
 
@@ -316,10 +329,12 @@ app.get('/cafeFavorites/:userId', (req, res) => {
         });
 });
 
-// Default route to handle 404 errors for unmatched API endpoints
+
+// Default route to handle 404 errors for unmatched API endpoints (NOT IN USE)
 app.get('*',(req,res) =>{
     res.sendStatus(404);
 });
+
 
 // Starting the Express server on the specified port (8080)
 app.listen(PORT, () => {
